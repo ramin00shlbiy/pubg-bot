@@ -3,7 +3,7 @@ primary_region = "fra"
 
 [build]
   [build.args]
-    BOT_TOKEN = "8823099835:AAGqYW6N3bELh0sIxvf8tRX8TOd1YvKPCr0"
+    # BOT_TOKEN را از اینجا حذف کنید (بهتر است در Environment Variables باشد)
 
 [[services]]
   http_checks = []

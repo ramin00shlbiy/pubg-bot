@@ -4,10 +4,9 @@
 
 const { Bot } = require('grammy');
 
-// توکن از Environment Variables
 const bot = new Bot(process.env.BOT_TOKEN);
 
-// ===== ذخیره موقت اطلاعات =====
+// ===== ذخیره موقت اطلاعات کاربران =====
 const users = {};
 
 // ===== دستور استارت =====

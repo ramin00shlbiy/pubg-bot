@@ -1,0 +1,7 @@
+{
+  "name": "pubg-bot",
+  "version": "1.0.0",
+  "dependencies": {
+    "grammy": "^1.17.0"
+  }
+}

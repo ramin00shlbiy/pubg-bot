@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PUBG Empire | ورود</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Netlify Identity Widget -->
     <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
     <!-- Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -40,14 +41,14 @@
                         <label>ایمیل</label>
                         <div class="input-wrapper">
                             <span class="input-icon">📧</span>
-                            <input type="email" placeholder="ایمیل خود را وارد کنید" required>
+                            <input type="email" id="login-email" placeholder="ایمیل خود را وارد کنید" required>
                         </div>
                     </div>
                     <div class="input-group">
                         <label>رمز عبور</label>
                         <div class="input-wrapper">
                             <span class="input-icon">🔒</span>
-                            <input type="password" placeholder="••••••••" required>
+                            <input type="password" id="login-password" placeholder="••••••••" required>
                         </div>
                     </div>
                     <button type="submit" class="btn-primary">
@@ -67,21 +68,21 @@
                         <label>نام کامل</label>
                         <div class="input-wrapper">
                             <span class="input-icon">👤</span>
-                            <input type="text" placeholder="نام و نام خانوادگی" required>
+                            <input type="text" id="register-name" placeholder="نام و نام خانوادگی" required>
                         </div>
                     </div>
                     <div class="input-group">
                         <label>ایمیل</label>
                         <div class="input-wrapper">
                             <span class="input-icon">📧</span>
-                            <input type="email" placeholder="ایمیل خود را وارد کنید" required>
+                            <input type="email" id="register-email" placeholder="ایمیل خود را وارد کنید" required>
                         </div>
                     </div>
                     <div class="input-group">
                         <label>رمز عبور</label>
                         <div class="input-wrapper">
                             <span class="input-icon">🔒</span>
-                            <input type="password" placeholder="حداقل ۶ کاراکتر" required>
+                            <input type="password" id="register-password" placeholder="حداقل ۶ کاراکتر" required>
                         </div>
                     </div>
                     <button type="submit" class="btn-primary">
@@ -123,4 +124,4 @@
 
     <script src="script.js"></script>
 </body>
-</html>
+    </html>

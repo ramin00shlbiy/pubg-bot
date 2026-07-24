@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>داشبورد | PUBG Empire</title>
     <link rel="stylesheet" href="style.css">
-    <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
     <div class="container">
@@ -48,19 +47,28 @@
     </div>
 
     <script>
-        const netlifyIdentity = window.netlifyIdentity;
+        // ===== بررسی وضعیت ورود =====
+        const token = localStorage.getItem('netlify_token');
+        const userData = localStorage.getItem('netlify_user');
 
-        // نمایش اطلاعات کاربر
-        netlifyIdentity.on('init', function(user) {
-            if (user) {
-                document.getElementById('user-name').textContent = user.user_metadata.full_name || 'کاربر';
+        if (token && userData) {
+            try {
+                const user = JSON.parse(userData);
+                document.getElementById('user-name').textContent = user.full_name || user.email || 'کاربر';
                 document.getElementById('user-email').textContent = user.email;
+            } catch (e) {
+                console.error('Error parsing user data:', e);
             }
-        });
+        } else {
+            // اگر کاربر وارد نشده، به صفحه ورود برگردانده شود
+            window.location.href = '/';
+        }
 
-        // خروج
+        // ===== خروج =====
         document.getElementById('logout-btn').addEventListener('click', function() {
-            netlifyIdentity.logout();
+            localStorage.removeItem('netlify_token');
+            localStorage.removeItem('netlify_user');
+            window.location.href = '/';
         });
     </script>
 </body>

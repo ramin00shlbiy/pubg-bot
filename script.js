@@ -1,5 +1,5 @@
 // ============================================
-// منطق ثبت‌نام و ورود با Netlify Identity API
+// منطق ثبت‌نام و ورود با گوگل (Netlify Identity)
 // ============================================
 
 console.log('🚀 script.js loaded successfully');
@@ -7,8 +7,7 @@ console.log('🚀 script.js loaded successfully');
 document.addEventListener('DOMContentLoaded', function() {
     console.log('📄 DOM loaded');
 
-    // ===== آدرس سایت =====
-    const SITE_URL = window.location.origin; // https://pubg-empire.netlify.app
+    const SITE_URL = window.location.origin;
 
     // ===== مدیریت تب‌ها =====
     const tabBtns = document.querySelectorAll('.tab-btn');
@@ -42,89 +41,91 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelector('.tab-btn[data-tab="login"]')?.click();
     });
 
-    // ===== ثبت‌نام کاربر (با fetch مستقیم) =====
-    document.getElementById('register')?.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        console.log('📝 Register form submitted');
+    // ============================================
+    // ورود با گوگل
+    // ============================================
+    document.getElementById('google-login-btn')?.addEventListener('click', function() {
+        console.log('🔐 Google login clicked');
+        // هدایت به صفحه ورود گوگل Netlify Identity
+        window.location.href = `${SITE_URL}/.netlify/identity/authorize?provider=google`;
+    });
 
-        const name = document.getElementById('register-name')?.value || '';
-        const email = document.getElementById('register-email')?.value || '';
-        const password = document.getElementById('register-password')?.value || '';
+    // ============================================
+    // ثبت‌نام با گوگل
+    // ============================================
+    document.getElementById('google-register-btn')?.addEventListener('click', function() {
+        console.log('📝 Google register clicked');
+        
+        const name = document.getElementById('register-name')?.value || 'کاربر';
+        
+        // ذخیره نام در localStorage برای استفاده بعد از بازگشت
+        localStorage.setItem('pending_name', name);
+        
+        // هدایت به صفحه ورود گوگل Netlify Identity
+        window.location.href = `${SITE_URL}/.netlify/identity/authorize?provider=google`;
+    });
 
-        if (password.length < 6) {
-            alert('⚠️ رمز عبور باید حداقل ۶ کاراکتر باشد.');
+    // ============================================
+    // بررسی وضعیت ورود (بعد از بازگشت از گوگل)
+    // ============================================
+    function checkLoginStatus() {
+        // بررسی وجود توکن در URL (بعد از بازگشت از گوگل)
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        
+        if (token) {
+            // ذخیره توکن
+            localStorage.setItem('netlify_token', token);
+            // حذف توکن از URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+            
+            // دریافت اطلاعات کاربر
+            fetchUserData(token);
             return;
         }
 
+        // بررسی توکن در localStorage
+        const savedToken = localStorage.getItem('netlify_token');
+        if (savedToken) {
+            fetchUserData(savedToken);
+        }
+    }
+
+    async function fetchUserData(token) {
         try {
-            const response = await fetch(`${SITE_URL}/.netlify/identity/signup`, {
-                method: 'POST',
+            const response = await fetch(`${SITE_URL}/.netlify/identity/user`, {
                 headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    email: email,
-                    password: password,
-                    full_name: name
-                })
+                    'Authorization': `Bearer ${token}`
+                }
             });
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.msg || 'خطا در ثبت‌نام');
+            if (response.ok) {
+                const user = await response.json();
+                console.log('✅ User logged in:', user);
+                
+                // ذخیره اطلاعات کاربر
+                localStorage.setItem('netlify_user', JSON.stringify(user));
+                
+                // هدایت به داشبورد
+                window.location.href = '/dashboard.html';
+            } else {
+                console.error('❌ Failed to fetch user data');
+                localStorage.removeItem('netlify_token');
             }
-
-            const data = await response.json();
-            console.log('User registered:', data);
-            
-            alert('✅ ثبت‌نام موفق! لطفاً ایمیل خود را تأیید کنید.');
-            document.getElementById('register')?.reset();
-            document.querySelector('.tab-btn[data-tab="login"]')?.click();
-
         } catch (error) {
-            alert('❌ خطا در ثبت‌نام: ' + error.message);
-            console.error(error);
+            console.error('❌ Error fetching user data:', error);
         }
-    });
+    }
 
-    // ===== ورود کاربر (با fetch مستقیم) =====
-    document.getElementById('login')?.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        console.log('🔐 Login form submitted');
+    // بررسی وضعیت ورود در هنگام بارگذاری صفحه
+    checkLoginStatus();
 
-        const email = document.getElementById('login-email')?.value || '';
-        const password = document.getElementById('login-password')?.value || '';
-
-        try {
-            const response = await fetch(`${SITE_URL}/.netlify/identity/token`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    email: email,
-                    password: password
-                })
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.msg || 'خطا در ورود');
-            }
-
-            const data = await response.json();
-            console.log('User logged in:', data);
-            
-            // ذخیره توکن در localStorage
-            localStorage.setItem('netlify_token', data.token);
-            localStorage.setItem('netlify_user', JSON.stringify(data.user));
-            
-            alert('✅ ورود موفق! به داشبورد هدایت می‌شوید.');
-            window.location.href = '/dashboard.html';
-
-        } catch (error) {
-            alert('❌ خطا در ورود: ' + error.message);
-            console.error(error);
-        }
-    });
+    // ============================================
+    // خروج (در صورت نیاز در صفحه اصلی)
+    // ============================================
+    window.logout = function() {
+        localStorage.removeItem('netlify_token');
+        localStorage.removeItem('netlify_user');
+        window.location.href = '/';
+    };
 });

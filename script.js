@@ -2,6 +2,13 @@
 // منطق ثبت‌نام و ورود با Netlify Identity
 // ============================================
 
+// بررسی دسترسی به Netlify Identity
+if (typeof netlifyIdentity === 'undefined') {
+    alert('⚠️ Netlify Identity در دسترس نیست. لطفاً صفحه را ریفرش کنید یا با پشتیبانی تماس بگیرید.');
+} else {
+    console.log('✅ Netlify Identity loaded successfully');
+}
+
 // راه‌اندازی Netlify Identity
 const netlifyIdentity = window.netlifyIdentity;
 
@@ -50,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const password = document.getElementById('register-password').value;
 
         if (password.length < 6) {
-            alert('رمز عبور باید حداقل ۶ کاراکتر باشد.');
+            alert('⚠️ رمز عبور باید حداقل ۶ کاراکتر باشد.');
             return;
         }
 

@@ -46,6 +46,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // ============================================
     document.getElementById('google-login-btn')?.addEventListener('click', function() {
         console.log('🔐 Google login clicked');
+        // ذخیره مسیر بازگشت در localStorage
+        localStorage.setItem('redirect_after_login', '/dashboard.html');
         // هدایت به صفحه ورود گوگل Netlify Identity
         window.location.href = `${SITE_URL}/.netlify/identity/authorize?provider=google`;
     });
@@ -57,11 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('📝 Google register clicked');
         
         const name = document.getElementById('register-name')?.value || 'کاربر';
-        
-        // ذخیره نام در localStorage برای استفاده بعد از بازگشت
         localStorage.setItem('pending_name', name);
-        
-        // هدایت به صفحه ورود گوگل Netlify Identity
         window.location.href = `${SITE_URL}/.netlify/identity/authorize?provider=google`;
     });
 
@@ -78,7 +76,6 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem('netlify_token', token);
             // حذف توکن از URL
             window.history.replaceState({}, document.title, window.location.pathname);
-            
             // دریافت اطلاعات کاربر
             fetchUserData(token);
             return;

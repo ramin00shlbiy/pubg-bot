@@ -3,204 +3,595 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PUBG Empire | ورود</title>
-    <link rel="stylesheet" href="style.css">
+    <title>PUBG Empire</title>
     <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================
+           RESET & BASE
+           ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0f;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* ============================================
+           BACKGROUND ANIMATION
+           ============================================ */
+        .bg-gradient {
+            position: fixed;
+            inset: 0;
+            background: 
+                radial-gradient(ellipse at 20% 50%, rgba(102, 126, 234, 0.12), transparent 60%),
+                radial-gradient(ellipse at 80% 80%, rgba(118, 75, 162, 0.08), transparent 60%),
+                radial-gradient(ellipse at 50% 0%, rgba(247, 151, 30, 0.04), transparent 50%);
+            animation: floatBg 25s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        @keyframes floatBg {
+            0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+            33% { transform: translate(2%, -2%) scale(1.02) rotate(1deg); }
+            66% { transform: translate(-2%, 2%) scale(0.98) rotate(-1deg); }
+        }
+
+        /* ============================================
+           CONTAINER
+           ============================================ */
+        .container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 440px;
+        }
+
+        /* ============================================
+           BRAND
+           ============================================ */
+        .brand {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .brand-icon {
+            font-size: 56px;
+            display: inline-block;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 8px 24px rgba(247, 151, 30, 0.2));
+        }
+
+        .brand-title {
+            font-size: 34px;
+            font-weight: 900;
+            color: #fff;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+        }
+
+        .brand-title span {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand-subtitle {
+            color: rgba(255, 255, 255, 0.35);
+            font-size: 14px;
+            font-weight: 400;
+            margin-top: 6px;
+            letter-spacing: 1px;
+        }
+
+        /* ============================================
+           AUTH CARD
+           ============================================ */
+        .auth-card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-radius: 28px;
+            padding: 36px 28px 32px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .auth-card:hover {
+            border-color: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 35px 90px rgba(0, 0, 0, 0.6);
+        }
+
+        /* ============================================
+           TABS
+           ============================================ */
+        .tabs {
+            display: flex;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 16px;
+            padding: 5px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px 8px;
+            border: none;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.35);
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .tab-btn .icon {
+            font-size: 16px;
+            opacity: 0.6;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.25), rgba(118, 75, 162, 0.25));
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.12);
+        }
+
+        .tab-btn.active .icon {
+            opacity: 1;
+        }
+
+        .tab-btn:hover:not(.active) {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* ============================================
+           FORMS
+           ============================================ */
+        .form-container {
+            display: none;
+            animation: fadeSlide 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .form-container.active {
+            display: block;
+        }
+
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        .input-group label {
+            display: block;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.3s ease;
+        }
+
+        .input-wrapper:focus-within {
+            border-color: rgba(102, 126, 234, 0.4);
+            background: rgba(102, 126, 234, 0.04);
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.06);
+        }
+
+        .input-icon {
+            padding: 0 14px;
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .input-wrapper input {
+            flex: 1;
+            padding: 15px 16px 15px 0;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #fff;
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+        }
+
+        .input-wrapper input::placeholder {
+            color: rgba(255, 255, 255, 0.15);
+            font-weight: 300;
+        }
+
+        /* ============================================
+           BUTTONS
+           ============================================ */
+        .btn-google {
+            width: 100%;
+            padding: 15px 20px;
+            background: #ffffff;
+            color: #1a1a2e;
+            border: none;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            margin-top: 6px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-google:hover {
+            background: #f8f9fa;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-google:active {
+            transform: scale(0.98);
+        }
+
+        .btn-google svg {
+            flex-shrink: 0;
+        }
+
+        /* ============================================
+           AUTH FOOTER
+           ============================================ */
+        .auth-footer {
+            text-align: center;
+            margin-top: 24px;
+            color: rgba(255, 255, 255, 0.25);
+            font-size: 14px;
+        }
+
+        .auth-footer a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .auth-footer a:hover {
+            color: #764ba2;
+        }
+
+        /* ============================================
+           DIVIDER
+           ============================================ */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            color: rgba(255, 255, 255, 0.12);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 0 22px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        /* ============================================
+           FEATURES
+           ============================================ */
+        .features {
+            display: flex;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .feature-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 16px;
+            padding: 18px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(102, 126, 234, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .feature-icon {
+            font-size: 26px;
+        }
+
+        .feature-text h4 {
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .feature-text p {
+            color: rgba(255, 255, 255, 0.25);
+            font-size: 11px;
+            font-weight: 400;
+        }
+
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
+        @media (max-width: 480px) {
+            body {
+                padding: 16px;
+            }
+
+            .auth-card {
+                padding: 28px 18px 24px;
+                border-radius: 24px;
+            }
+
+            .brand-title {
+                font-size: 28px;
+            }
+
+            .brand-icon {
+                font-size: 44px;
+            }
+
+            .features {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .feature-item {
+                flex-direction: row;
+                padding: 14px 16px;
+                gap: 12px;
+            }
+
+            .feature-text {
+                text-align: right;
+            }
+
+            .tab-btn {
+                font-size: 13px;
+                padding: 10px 6px;
+            }
+
+            .tab-btn .icon {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .brand-title {
+                font-size: 24px;
+            }
+
+            .auth-card {
+                padding: 20px 14px 18px;
+            }
+
+            .btn-google {
+                font-size: 13px;
+                padding: 12px 16px;
+            }
+        }
+    </style>
 </head>
 <body>
+
     <div class="bg-gradient"></div>
-    
-    <div class="container" id="app">
-        <!-- ===== صفحه ورود ===== -->
-        <div id="login-page">
-            <div class="brand">
-                <div class="logo-icon">🏆</div>
-                <h1 class="brand-title">PUBG <span>Empire</span></h1>
-                <p class="brand-subtitle">مسابقات و صرافی حرفه‌ای پابجی</p>
+
+    <div class="container">
+
+        <!-- ==========================================
+        BRAND
+        ========================================== -->
+        <div class="brand">
+            <div class="brand-icon">🏆</div>
+            <h1 class="brand-title">PUBG <span>Empire</span></h1>
+            <p class="brand-subtitle">مسابقات و صرافی حرفه‌ای پابجی</p>
+        </div>
+
+        <!-- ==========================================
+        AUTH CARD
+        ========================================== -->
+        <div class="auth-card">
+
+            <!-- TABS -->
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="login">
+                    <span class="icon">🔐</span> ورود
+                </button>
+                <button class="tab-btn" data-tab="register">
+                    <span class="icon">📝</span> ثبت‌نام
+                </button>
             </div>
 
-            <div class="auth-card">
-                <div class="tabs">
-                    <button class="tab-btn active" data-tab="login">🔐 ورود</button>
-                    <button class="tab-btn" data-tab="register">📝 ثبت‌نام</button>
-                </div>
+            <!-- ==========================================
+            LOGIN FORM
+            ========================================== -->
+            <div id="login-form" class="form-container active">
+                <button id="google-login-btn" class="btn-google">
+                    <svg width="20" height="20" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    ورود با گوگل
+                </button>
 
-                <!-- فرم ورود -->
-                <div id="login-form" class="form-container active">
-                    <div class="social-login">
-                        <button id="google-login-btn" class="btn-google">
-                            <svg width="20" height="20" viewBox="0 0 24 24">
-                                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                            </svg>
-                            ورود با گوگل
-                        </button>
-                    </div>
-                    <div class="auth-footer">
-                        <span>حساب ندارید؟</span>
-                        <a href="#" id="switch-to-register">ثبت‌نام کنید</a>
-                    </div>
+                <div class="auth-footer">
+                    حساب ندارید؟ <a href="#" id="switch-to-register">ثبت‌نام کنید</a>
                 </div>
+            </div>
 
-                <!-- فرم ثبت‌نام -->
-                <div id="register-form" class="form-container">
-                    <form id="register">
-                        <div class="input-group">
-                            <label>نام کامل</label>
-                            <div class="input-wrapper">
-                                <span class="input-icon">👤</span>
-                                <input type="text" id="register-name" placeholder="نام و نام خانوادگی" required>
-                            </div>
+            <!-- ==========================================
+            REGISTER FORM
+            ========================================== -->
+            <div id="register-form" class="form-container">
+                <form id="register">
+                    <div class="input-group">
+                        <label>نام کامل</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">👤</span>
+                            <input type="text" id="register-name" placeholder="نام و نام خانوادگی" required>
                         </div>
-                        <div class="input-group">
-                            <label>اسم مستعار (نام کاربری)</label>
-                            <div class="input-wrapper">
-                                <span class="input-icon">🎮</span>
-                                <input type="text" id="register-nickname" placeholder="اسم مستعار خود را وارد کنید" required>
-                            </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>اسم مستعار (نام کاربری)</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">🎮</span>
+                            <input type="text" id="register-nickname" placeholder="یک نام مستعار انتخاب کنید" required>
                         </div>
-                        <div class="social-login">
-                            <button type="button" id="google-register-btn" class="btn-google">
-                                <svg width="20" height="20" viewBox="0 0 24 24">
-                                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                                </svg>
-                                ثبت‌نام با گوگل
-                            </button>
-                        </div>
-                    </form>
-                    <div class="auth-footer">
-                        <span>قبلاً ثبت‌نام کرده‌اید؟</span>
-                        <a href="#" id="switch-to-login">وارد شوید</a>
                     </div>
+
+                    <button type="button" id="google-register-btn" class="btn-google">
+                        <svg width="20" height="20" viewBox="0 0 24 24">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                        </svg>
+                        ثبت‌نام با گوگل
+                    </button>
+                </form>
+
+                <div class="auth-footer">
+                    قبلاً ثبت‌نام کرده‌اید؟ <a href="#" id="switch-to-login">وارد شوید</a>
                 </div>
             </div>
 
-            <div class="features">
-                <div class="feature-item">
-                    <div class="feature-icon">🎮</div>
-                    <div class="feature-text">
-                        <h4>مسابقات حرفه‌ای</h4>
-                        <p>روزانه با جوایز نقدی</p>
-                    </div>
+        </div>
+
+        <!-- ==========================================
+        FEATURES
+        ========================================== -->
+        <div class="features">
+            <div class="feature-item">
+                <div class="feature-icon">🎮</div>
+                <div class="feature-text">
+                    <h4>مسابقات حرفه‌ای</h4>
+                    <p>روزانه با جوایز نقدی</p>
                 </div>
-                <div class="feature-item">
-                    <div class="feature-icon">💰</div>
-                    <div class="feature-text">
-                        <h4>کیف پول امن</h4>
-                        <p>واریز و برداشت آنی</p>
-                    </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">💰</div>
+                <div class="feature-text">
+                    <h4>کیف پول امن</h4>
+                    <p>واریز و برداشت آنی</p>
                 </div>
-                <div class="feature-item">
-                    <div class="feature-icon">🏆</div>
-                    <div class="feature-text">
-                        <h4>جوایز بزرگ</h4>
-                        <p>تا ۱۰۰۰ یوسی</p>
-                    </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">🏆</div>
+                <div class="feature-text">
+                    <h4>جوایز بزرگ</h4>
+                    <p>تا ۱۰۰۰ یوسی</p>
                 </div>
             </div>
         </div>
 
-        <!-- ===== صفحه داشبورد ===== -->
-        <div id="dashboard-page" style="display:none;">
-            <div class="brand">
-                <div class="logo-icon">🏆</div>
-                <h1 class="brand-title">PUBG <span>Empire</span></h1>
-                <p class="brand-subtitle">داشبورد کاربری</p>
-            </div>
-
-            <div class="dashboard-box">
-                <div class="user-info">
-                    <div class="avatar">👤</div>
-                    <div>
-                        <h3 id="user-name">کاربر</h3>
-                        <p id="user-nickname">اسم مستعار</p>
-                        <p id="user-email">email@example.com</p>
-                    </div>
-                </div>
-
-                <div class="stats">
-                    <div class="stat-card">
-                        <span>💰</span>
-                        <p>موجودی</p>
-                        <h3 id="user-balance">0 UC</h3>
-                    </div>
-                </div>
-
-                <div class="menu-grid">
-                    <button class="menu-btn" onclick="showPage('matches')">🏆 مسابقات</button>
-                    <button class="menu-btn" onclick="showPage('charge')">💰 شارژ حساب</button>
-                    <button class="menu-btn" onclick="showPage('profile')">👤 پروفایل</button>
-                    <button class="menu-btn" onclick="logout()">🚪 خروج</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- ===== صفحه مسابقات ===== -->
-        <div id="matches-page" style="display:none;">
-            <div class="page-header">
-                <button class="back-btn" onclick="showPage('dashboard')">← بازگشت</button>
-                <h2>🏆 مسابقات</h2>
-            </div>
-            <div class="matches-list">
-                <div class="match-card" onclick="registerMatch('room')">
-                    <h3>🎮 روم</h3>
-                    <p>💰 ۱۳۰ UC</p>
-                    <p>👥 ۴ نفر</p>
-                    <p>🎁 ۱ رویال پاس یا ۱۰۰ UC</p>
-                    <button class="btn-primary">ثبت‌نام</button>
-                </div>
-                <div class="match-card" onclick="registerMatch('solo')">
-                    <h3>🥇 سولو</h3>
-                    <p>💰 ۱۸۰ UC</p>
-                    <p>👥 ۴ نفر</p>
-                    <p>🎁 ۱ رویال پاس + ۲۰۰ UC یا ۳۰۰ UC</p>
-                    <button class="btn-primary">ثبت‌نام</button>
-                </div>
-                <div class="match-card" onclick="registerMatch('duo')">
-                    <h3>👥 دوتایی</h3>
-                    <p>💰 ۲۵۰ UC</p>
-                    <p>👥 ۸ نفر</p>
-                    <p>🎁 ۱ رویال پاس + ۲۰۰ UC یا ۳۰۰ UC (هر نفر)</p>
-                    <button class="btn-primary">ثبت‌نام</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- ===== صفحه شارژ ===== -->
-        <div id="charge-page" style="display:none;">
-            <div class="page-header">
-                <button class="back-btn" onclick="showPage('dashboard')">← بازگشت</button>
-                <h2>💰 شارژ حساب</h2>
-            </div>
-            <div class="charge-box">
-                <p>موجودی فعلی: <strong id="charge-balance">0 UC</strong></p>
-                <p>کد ۱۶ رقمی خود را وارد کنید:</p>
-                <input type="text" id="charge-code" placeholder="مثال: ABCD1234EFGH5678" maxlength="16">
-                <button class="btn-primary" onclick="submitCharge()">ارسال کد</button>
-            </div>
-        </div>
-
-        <!-- ===== صفحه پروفایل ===== -->
-        <div id="profile-page" style="display:none;">
-            <div class="page-header">
-                <button class="back-btn" onclick="showPage('dashboard')">← بازگشت</button>
-                <h2>👤 پروفایل</h2>
-            </div>
-            <div class="profile-box">
-                <p><strong>نام:</strong> <span id="profile-name"></span></p>
-                <p><strong>اسم مستعار:</strong> <span id="profile-nickname"></span></p>
-                <p><strong>ایمیل:</strong> <span id="profile-email"></span></p>
-                <p><strong>موجودی:</strong> <span id="profile-balance">0 UC</span></p>
-            </div>
-        </div>
     </div>
 
-    <script src="script.js"></script>
-</body>
-    </html>
+    <!-- ==========================================
+    SCRIPT
+    ========================================== -->
+    <script>
+        // ============================================
+        // NETLIFY IDENTITY
+        // ============================================
+        console.log('🚀 PUBG Empire loaded');
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('📄 DOM ready');
+
+            const SITE_URL = window.location.origin;
+
+            // ===== TABS =====
+            const tabs = document.querySelectorAll('.tab-btn');
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+
+            tabs.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    tabs.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+
+                    const tab = this.dataset.tab;
+                    if (tab === 'login') {
+                        loginForm.classList.add('active');
+                        registerForm.classList.remove('active');
+                    } else {
+                        registerForm.classList.add('active');
+                        loginForm.classList.remove('active');
+                    }
+                });
+            });
+
+            // ===== SWITCH =====
+            document.getElementById('switch-to-register')?.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector('.tab-btn[data-tab="register"]')?.click();
+            });
+
+            document.getElementById('switch-to-login')?.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector('.tab-btn[data-tab="login"]')?.click();
+            });
+
+            // ===== GOOGLE LOGIN =====
+            document.getElementById('google-login-btn')?.addEventListener('click', function() {
+                localStorage.setItem('redirect_after_login', '/dashboard.html');
+                window.location.href = `${SITE_URL}/.netlify/identity/authorize?provider=google`;
+            });
+
+            // ===== GOOGLE REGISTER =====
+            document.getElementById('google-register-btn')?.addEventListener('click', function() {
+                const name 

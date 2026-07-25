@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>پنل مدیریت | PUBG Empire</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    
+    <div class="container" id="admin-app">
+        <div class="brand">
+            <div class="logo-icon">👑</div>
+            <h1 class="brand-title">PUBG <span>Empire</span></h1>
+            <p class="brand-subtitle">پنل مدیریت</p>
+        </div>
+
+        <div class="admin-card">
+            <!-- بخش کدهای در انتظار -->
+            <div class="admin-section">
+                <h2>📥 کدهای در انتظار تأیید</h2>
+                <div id="pending-codes-list">
+                    <p class="empty-msg">هیچ کدی در انتظار تأیید نیست.</p>
+                </div>
+            </div>
+
+            <!-- بخش مدیریت کاربران -->
+            <div class="admin-section">
+                <h2>👥 کاربران</h2>
+                <div id="users-list">
+                    <p class="empty-msg">هیچ کاربری ثبت‌نام نکرده است.</p>
+                </div>
+            </div>
+
+            <!-- بخش مدیریت مسابقات -->
+            <div class="admin-section">
+                <h2>🏆 مسابقات فعال</h2>
+                <div id="matches-list">
+                    <p class="empty-msg">هیچ مسابقه فعالی وجود ندارد.</p>
+                </div>
+            </div>
+
+            <button class="btn-primary" onclick="logout()">🚪 خروج</button>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>

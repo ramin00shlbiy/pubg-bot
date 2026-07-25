@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PUBG Empire</title>
+    <!-- Netlify Identity -->
     <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <!-- Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         /* ============================================
@@ -545,7 +547,7 @@
     ========================================== -->
     <script>
         // ============================================
-        // NETLIFY IDENTITY
+        // NETLIFY IDENTITY - نسخه اصلاح‌شده
         // ============================================
         console.log('🚀 PUBG Empire loaded');
 
@@ -553,6 +555,15 @@
             console.log('📄 DOM ready');
 
             const SITE_URL = window.location.origin;
+
+            // ===== بررسی در دسترس بودن Netlify Identity =====
+            if (typeof netlifyIdentity === 'undefined') {
+                console.error('❌ Netlify Identity not available!');
+                alert('⚠️ سیستم احراز هویت در حال بارگذاری است. لطفاً صفحه را ریفرش کنید.');
+                return;
+            }
+
+            console.log('✅ Netlify Identity loaded');
 
             // ===== TABS =====
             const tabs = document.querySelectorAll('.tab-btn');
@@ -575,23 +586,115 @@
                 });
             });
 
-            // ===== SWITCH =====
-            document.getElementById('switch-to-register')?.addEventListener('click', function(e) {
-                e.preventDefault();
-                document.querySelector('.tab-btn[data-tab="register"]')?.click();
-            });
+            // ===== SWITCH BETWEEN FORMS =====
+            const switchToRegister = document.getElementById('switch-to-register');
+            const switchToLogin = document.getElementById('switch-to-login');
 
-            document.getElementById('switch-to-login')?.addEventListener('click', function(e) {
-                e.preventDefault();
-                document.querySelector('.tab-btn[data-tab="login"]')?.click();
-            });
+            if (switchToRegister) {
+                switchToRegister.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.querySelector('.tab-btn[data-tab="register"]')?.click();
+                });
+            }
+
+            if (switchToLogin) {
+                switchToLogin.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.querySelector('.tab-btn[data-tab="register"]')?.click();
+                });
+            }
+
+            if (switchToLogin) {
+                switchToLogin.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.querySelector('.tab-btn[data-tab="login"]')?.click();
+                });
+            }
 
             // ===== GOOGLE LOGIN =====
-            document.getElementById('google-login-btn')?.addEventListener('click', function() {
-                localStorage.setItem('redirect_after_login', '/dashboard.html');
-                window.location.href = `${SITE_URL}/.netlify/identity/authorize?provider=google`;
-            });
+            const googleLoginBtn = document.getElementById('google-login-btn');
+            if (googleLoginBtn) {
+                googleLoginBtn.addEventListener('click', function() {
+                    console.log('🔐 Google login clicked');
+                    localStorage.setItem('redirect_after_login', '/dashboard.html');
+                    window.location.href = `${SITE_URL}/.netlify/identity/authorize?provider=google`;
+                });
+            } else {
+                console.error('❌ google-login-btn not found');
+            }
 
             // ===== GOOGLE REGISTER =====
-            document.getElementById('google-register-btn')?.addEventListener('click', function() {
-                const name 
+            const googleRegisterBtn = document.getElementById('google-register-btn');
+            if (googleRegisterBtn) {
+                googleRegisterBtn.addEventListener('click', function() {
+                    console.log('📝 Google register clicked');
+                    const name = document.getElementById('register-name')?.value || 'کاربر';
+                    const nickname = document.getElementById('register-nickname')?.value || name;
+                    localStorage.setItem('pending_name', name);
+                    localStorage.setItem('pending_nickname', nickname);
+                    window.location.href = `${SITE_URL}/.netlify/identity/authorize?provider=google`;
+                });
+            } else {
+                console.error('❌ google-register-btn not found');
+            }
+
+            // ===== CHECK LOGIN STATUS =====
+            function checkLoginStatus() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const token = urlParams.get('token');
+
+                if (token) {
+                    console.log('🔑 Token found in URL');
+                    localStorage.setItem('netlify_token', token);
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                    fetchUserData(token);
+                    return;
+                }
+
+                const savedToken = localStorage.getItem('netlify_token');
+                if (savedToken) {
+                    console.log('🔑 Token found in localStorage');
+                    fetchUserData(savedToken);
+                }
+            }
+
+            // ===== FETCH USER DATA =====
+            async function fetchUserData(token) {
+                try {
+                    console.log('📡 Fetching user data...');
+                    const response = await fetch(`${SITE_URL}/.netlify/identity/user`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+
+                    if (response.ok) {
+                        const user = await response.json();
+                        console.log('✅ User logged in:', user);
+                        
+                        const userData = {
+                            email: user.email,
+                            name: user.full_name || 'کاربر',
+                            nickname: localStorage.getItem('pending_nickname') || 'کاربر',
+                            balance: 0
+                        };
+                        localStorage.setItem('netlify_user', JSON.stringify(userData));
+                        localStorage.removeItem('pending_nickname');
+                        window.location.href = '/dashboard.html';
+                    } else {
+                        console.error('❌ Failed to fetch user data');
+                        localStorage.removeItem('netlify_token');
+                    }
+                } catch (error) {
+                    console.error('❌ Error fetching user data:', error);
+                }
+            }
+
+            // ===== RUN =====
+            checkLoginStatus();
+        });
+    </script>
+
+</body>
+</html>
+                

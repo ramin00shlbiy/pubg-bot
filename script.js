@@ -91,36 +91,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // ===== دریافت اطلاعات کاربر =====
     async function fetchUserData(token) {
-        try {
-            console.log('📡 Fetching user data...');
-            const response = await fetch(`${SITE_URL}/.netlify/identity/user`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
+    try {
+        const response = await fetch(`${SITE_URL}/.netlify/identity/user`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
 
-            if (response.ok) {
-                const user = await response.json();
-                console.log('✅ User logged in:', user);
-                
-                // ذخیره اطلاعات کاربر
-                const userData = {
-                    email: user.email,
-                    name: user.full_name || 'کاربر',
-                    nickname: localStorage.getItem('pending_nickname') || user.full_name || 'کاربر',
-                    balance: 0
-                };
-                localStorage.setItem('netlify_user', JSON.stringify(userData));
-                localStorage.removeItem('pending_nickname');
-                
-                // هدایت به داشبورد
-                window.location.href = '/dashboard.html';
-            } else {
-                console.error('❌ Failed to fetch user data');
-                localStorage.removeItem('netlify_token');
-            }
-        } catch (error) {
-            console.error('❌ Error fetching user data:', error);
+        if (response.ok) {
+            const user = await response.json();
+            console.log('✅ User logged in:', user);
+            localStorage.setItem('netlify_user', JSON.stringify(user));
+            
+            // ✅ هدایت به داشبورد
+            window.location.href = '/dashboard.html';
+        } else {
+            console.error('❌ Failed to fetch user data');
+            localStorage.removeItem('netlify_token');
         }
+    } catch (error) {
+        console.error('❌ Error fetching user data:', error);
     }
+}
 
     checkLoginStatus();
 
